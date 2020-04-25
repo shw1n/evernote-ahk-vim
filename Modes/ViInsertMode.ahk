@@ -9,16 +9,16 @@ end_vi_insert_mode(){
 
 vi_insert_mode_handle_keys(key){
   ; MsgBox, %key%
-  global vi_insert_mode
+  ;global vi_insert_mode
 
-  if (vi_insert_mode["simple_commands"].HasKey(key)) {
-    KMD_ViperDoRepeat(vi_insert_mode["simple_commands"][key])
-    return
-  }
+  ;if (vi_insert_mode["simple_commands"].HasKey(key)) {
+  ;  KMD_ViperDoRepeat(vi_insert_mode["simple_commands"][key])
+  ;  return
+  ;}
 
-  ; drop repeat count
-  vi_insert_mode["repeat_count"] := 0
-  vi_insert_mode["last_chars"] := ""
+  ;; drop repeat count
+  ;vi_insert_mode["repeat_count"] := 0
+  ;vi_insert_mode["last_chars"] := ""
   KMD_Send(key)
 }
 

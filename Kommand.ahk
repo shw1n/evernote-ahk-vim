@@ -22,7 +22,8 @@
 
 #NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance, Force ; Make sure there is only one instance of Kommand running at a time.
-#WinActivateForce ; Forces windows to appear when they're called.
+;#WinActivateForce ; Forces windows to appear when they're called.
+#IfWinActive ahk_class ENMainFrame
 
 
 ; include modes
@@ -40,19 +41,20 @@ KMD_Init()
 ; #Include Scripts\CoreHotkeys.ahk
 ; #Include Custom\CustomHotkeys.ahk
 
+; todo - ctrl+c, no caps lock stuff
 
 return
 
 KMD_Init()
 {
      global
-     DetectHiddenWindows, on ; Be able to find hidden windows.
+     ;DetectHiddenWindows, on ; Be able to find hidden windows.
      SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
      SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
      SetBatchlines, -1 ; Make the script run as fast as possible.
      SetKeyDelay, -1 ; Make sure it is fast!
 
-     KMD_SENDING := 0
+     ;KMD_SENDING := 0
 
      KMD_Modes := Object()
 
@@ -66,10 +68,8 @@ KMD_Init()
 
 KMD_Send(keys)
 {
-  global KMD_SENDING
-  KMD_SENDING :=1
   Send, %keys%
-  KMD_SENDING :=0
+  return
 }
 
 KMD_SetMode(mode){
@@ -84,10 +84,10 @@ KMD_SetMode(mode){
   Menu, Tray, Icon, %A_ScriptDir%\Images\%mode%.ico, 0, 1
 }
     
-ShowMessage(title, message, icon)
-{
-  Run Utilities\SnarlCMD.exe snShowMessage 5 "%title%" "%message%" "%A_ScriptDir%\Images\%icon%",,UseErrorLevel
-}
+;ShowMessage(title, message, icon)
+;{
+;  Run Utilities\SnarlCMD.exe snShowMessage 5 "%title%" "%message%" "%A_ScriptDir%\Images\%icon%",,UseErrorLevel
+;}
 
 
 Capslock::
@@ -95,16 +95,22 @@ Capslock::
     KMD_SetMode("vi_normal_mode")
   }else if (KMD_Mode != "disabled") {
     KMD_SetMode("disabled")
-  } else {
-    ; set / toggle mode depending on Window?
+  } else if (KMD_MODE == "disabled"){
     KMD_SetMode("vi_normal_mode")
   }
+return
+
+^c::
+  if (KMD_Mode == "vi_insert_mode"){
+    KMD_SetMode("vi_normal_mode")
+  }
+  KMD_Send("{Shift Up}")
 return
 
 ; Boy this is insane!
 ; But its the onlsy modular way which came to my mind!
 
-#if (KMD_SENDING == 0)
+;#if (KMD_SENDING == 0)
 
 Enter::
   KMD_Modes[KMD_Mode]["handle_keys"]("{Enter}") 
@@ -404,9 +410,6 @@ return
 return
 ^b::
   KMD_Modes[KMD_Mode]["handle_keys"]("^b")
-return
-^c::
-  KMD_Modes[KMD_Mode]["handle_keys"]("^c")
 return
 ^d::
   KMD_Modes[KMD_Mode]["handle_keys"]("^d")
