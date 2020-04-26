@@ -1,28 +1,17 @@
-This project implements vi like keys for any arbitrary editor like app on
-windows as far as possible.
+Based off https://github.com/MarcWeber/autohotkey_viper
 
-Eg w es emulated by <c-right> and e is emulated by <c-right> <left>
+Heavily modified, removed a lot of the bloat.
 
-This is a rewrite of 
-  http://www.autohotkey.com/forum/topic44762.html 
-cleaning up the code removing much repetition.
+Features:
+hjkl
+gg
+G
+v highlight (doesn't work with $ or G due to Shift Down key issue w/ AHK)
 
+x, number repeats (e.g. 5j)
 
-TODO:
-implement searches:
-/?*# (depend on window. Probably ctl-f can be used almost everywhere, but setting forward / backward might be different)
+Basic stuff, enough to make me enjoy using Evernote
 
-implement visual selection mode (needs state)
+Enabled / disabled via Caps Lock, only activates on Evernote
 
-
-implement things like { } etc. Strategy: Copy whole buffer to clipboard, use
-shift-END or such to find position of cursor
-using this "current" line calculate movement options
-
-
-
-Note: Don't think that this comes even close to Vim features. But it works everywhere
-
-
-TODO:
-- make it switch off vi mode if user changes app manually eg by alt-tab
+Todo: ":w" (requires adding state) and fix v highlight for $ and G
