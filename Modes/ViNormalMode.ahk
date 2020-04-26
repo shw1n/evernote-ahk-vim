@@ -164,7 +164,6 @@ vi_normal_mode_handle_keys(key)
     return
   }
 
-
   if (vi_normal_mode["simple_commands"].HasKey(key)) 
   {
     KMD_ViperDoRepeat(vi_normal_mode["simple_commands"][key])

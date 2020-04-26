@@ -100,12 +100,6 @@ Capslock::
   }
 return
 
-^c::
-  if (KMD_Mode == "vi_insert_mode"){
-    KMD_SetMode("vi_normal_mode")
-  }
-  KMD_Send("{Shift Up}")
-return
 
 ; Boy this is insane!
 ; But its the onlsy modular way which came to my mind!
