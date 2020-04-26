@@ -43,8 +43,8 @@ vi_slow_goto_line(nr)
 
 vi_normal_mode_handle_keys(key)
 {
-  ; MsgBox, %key%
   global
+  ;MsgBox, %key%
 
   WinGet, win_id, ID, A
 
@@ -55,6 +55,8 @@ vi_normal_mode_handle_keys(key)
   }
 
 
+  ; For some reason commands using {End} don't allow
+  ; highlighting (holding shift down), idk why
   if (vi_normal_mode["last_chars"] == "g")
   {
     ;; gg gT gt
@@ -74,12 +76,10 @@ vi_normal_mode_handle_keys(key)
 
   if (key == "+g")
   {
-    if (vi_normal_mode["repeat_count"] == 0){
-       KMD_Send("^{End}")
-    } else 
-    {
-      api["goto_line"](vi_normal_mode["repeat_count"])
-      vi_normal_mode["repeat_count"] := 0
+    if (vi_normal_mode["visual"] == "down") {
+        KMD_Send("{Shift Down}^{End}")
+    } else {
+        KMD_Send("^{End}")
     }
     return
   }
@@ -149,6 +149,18 @@ vi_normal_mode_handle_keys(key)
 
   if (key == "v"){
     KMD_Send("{Shift Down}")
+    vi_normal_mode["visual"] = "down"
+    return
+  } else {
+    vi_normal_mode["visual"] = "up"
+  }
+
+  if (key == "$") {
+    if(vi_normal_mode["visual"] == "down") {
+        KMD_Send("{Shift Down}{End}")
+    } else {
+        KMD_Send("{End}")
+    }
     return
   }
 
@@ -164,6 +176,7 @@ vi_normal_mode_handle_keys(key)
     KMD_SetMode("vi_insert_mode")
     return
   }
+
 
   ; drop repeat count
   vi_normal_mode["repeat_count"] := 0
@@ -193,7 +206,7 @@ vi_normal_mode["simple_commands"]["x"] := "{Del}"
 vi_normal_mode["simple_commands"]["+x"] := "{BS}"
 vi_normal_mode["simple_commands"]["+d"] := "+{END}{Del}"
 
-vi_normal_mode["simple_commands"]["$"]  := "{END}"
+vi_normal_mode["simple_commands"]["$"]  := "{End}"
 ; vi_normal_mode["simple_commands"]["^u"] := "{PgUp}"
 ; vi_normal_mode["simple_commands"]["^d"] := "{PgDn}"
 vi_normal_mode["simple_commands"]["u"]  := "^z"
